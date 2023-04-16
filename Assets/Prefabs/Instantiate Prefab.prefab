@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 668234259218363778}
   - component: {fileID: 6957925056606381265}
   - component: {fileID: 126976300282827991}
-  - component: {fileID: 8207072831241786017}
+  - component: {fileID: 4116628779875636044}
+  - component: {fileID: 5845807717611020125}
   m_Layer: 0
   m_Name: Instantiate Prefab
   m_TagString: Untagged
@@ -113,7 +114,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8207072831241786017
+--- !u!136 &4116628779875636044
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9036735879403632026}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &5845807717611020125
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

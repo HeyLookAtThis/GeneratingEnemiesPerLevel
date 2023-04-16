@@ -1,65 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[RequireComponent(typeof(Transform))]
 
 public class InstantiatePoint : MonoBehaviour
 {
     [SerializeField] private Enemy _enemy;
     private int _enemiesCount = 3;
-
-    private List<Vector3> _spawnPositions = new List<Vector3>();
+    private Transform _transform;
+    private bool _isFree;
 
     private void Start()
     {
-        InitiateSpawnPositions();
-        StartCoroutine(Spawn());
+        _transform = GetComponent<Transform>();
+
+        StartCoroutine(CreateEnemy());
     }
 
-    private IEnumerator Spawn()
+    private IEnumerator CreateEnemy()
     {
-        float seconds = 0.5f;
-        var enumerator = new WaitForSeconds(seconds);
-
-
-        for (int i=0; i<_spawnPositions.Count; i++)
-        {
-            StartCoroutine(CreateEnemy(_spawnPositions[i]));
-            yield return enumerator;
-
-            if (i == _spawnPositions.Count)
-                yield break;
-        }
-    }
-
-    private IEnumerator CreateEnemy(Vector3 position)
-    {
-        float seconds = 2.0f;
-        var enumerator = new WaitForSeconds(seconds);
+        Func<bool> func = IsPointBusy;
+        var WaitWhile = new WaitUntil(func);
+        Vector3 position = _transform.position;
+        position.y *= 2;
 
         for (int i = 0; i < _enemiesCount; i++)
         {
-            var newEnemy = Instantiate(_enemy, position, Quaternion.identity);
-            yield return enumerator;
+            Enemy newEnemy = Instantiate(_enemy, position, Quaternion.identity);      
+
+            yield return WaitWhile;
 
             if (i == _enemiesCount)
                 yield break;
         }
     }
 
-    private void InitiateSpawnPositions()
+    private bool IsPointBusy()
     {
-        float topPosition = 10.0f;
-        float bottomPosition = 20.0f;
-        float height = 3;
+        return _isFree;
+    }
 
-        Vector3 topLeftPoint = new Vector3(topPosition, height, topPosition);
-        Vector3 topRightPoint = new Vector3(topPosition, height, bottomPosition);
-        Vector3 bottomLeftPoint = new Vector3(bottomPosition, height, topPosition);
-        Vector3 bottomRightPoint = new Vector3(bottomPosition, height, bottomPosition);
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.TryGetComponent<Enemy>(out Enemy enemy))
+            _isFree = false;
+    }
 
-        _spawnPositions.Add(topLeftPoint);
-        _spawnPositions.Add(topRightPoint);
-        _spawnPositions.Add(bottomLeftPoint);
-        _spawnPositions.Add(bottomRightPoint);
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.TryGetComponent<Enemy>(out Enemy enemy))
+            _isFree = true;
     }
 }
