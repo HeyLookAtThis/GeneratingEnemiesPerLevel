@@ -3,29 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class InstantiationActivator : MonoBehaviour
+public class Spawner : MonoBehaviour
 {
-    private int _pointsCounter;
+    private static int _pointsCount = 5;
+    [SerializeField] private InstantiationPoint[] _points = new InstantiationPoint[_pointsCount];
 
     private void Start()
     {
-        InstantiationPoint[] points = FindObjectsOfType<InstantiationPoint>();
-        StartCoroutine(ActivatePoint(points));
+        StartCoroutine(ActivatePoint(_points));
     }
 
     private IEnumerator ActivatePoint(InstantiationPoint[] points)
     {
         float seconds = 2.0f;
         var waitForSeconds = new WaitForSeconds(seconds);
+        int pointsCounter = 0;
 
         foreach (var point in points)
         {
             point.CreateEnemy();
-            _pointsCounter++;
+            pointsCounter++;
             yield return waitForSeconds;
         }
 
-        if (_pointsCounter == points.Length)
+        if (pointsCounter == points.Length)
             yield break;
     }
 }
